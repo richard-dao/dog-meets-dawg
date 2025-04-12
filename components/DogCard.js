@@ -2,21 +2,18 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, Platform } from 'react-native';
 
 const { width: deviceWidth, height: deviceHeight } = Dimensions.get('window');
-
 const isWeb = Platform.OS === 'web';
-const cardWidth = isWeb ? Math.min(deviceWidth * 0.9, 500) : deviceWidth;
+const cardWidth = isWeb ? Math.min(deviceWidth * 0.95, 500) : deviceWidth;
 const cardHeight = isWeb ? cardWidth * 1.4 : deviceHeight;
 
-const DogCard = ({ name, age, image }) => {
+const DogCard = ({ name, age, image, breed }) => {
   return (
-    <View style={[styles.cardWrapper, isWeb && styles.cardWrapperWeb]}>
+    <View style={styles.cardWrapper}>
       <View style={[styles.card, { width: cardWidth, height: cardHeight }]}>
-        <Image
-          source={{ uri: image }}
-          style={[styles.image, { width: cardWidth, height: cardHeight * 0.65 }]}
-        />
+        <Image source={{ uri: image }} style={[styles.image, { width: cardWidth, height: cardHeight * 0.65 }]} />
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{name}, {age}</Text>
+          <Text style={styles.breed}>{breed}</Text>
           <Text style={styles.subtitle}>Looking for new pup friends 🐾</Text>
         </View>
       </View>
@@ -29,9 +26,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  cardWrapperWeb: {
-    paddingTop: 40,
   },
   card: {
     backgroundColor: '#fff',
@@ -51,10 +45,16 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
-  subtitle: {
+  breed: {
     fontSize: 18,
+    color: '#333',
+    fontStyle: 'italic',
+    marginTop: 4,
+  },
+  subtitle: {
+    fontSize: 16,
     color: '#666',
-    marginTop: 6,
+    marginTop: 10,
   },
 });
 

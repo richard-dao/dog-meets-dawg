@@ -5,6 +5,7 @@ import LoginScreen from './screens/LoginScreen';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [matches, setMatches] = useState([]); // 👈 make sure this is here
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -15,7 +16,11 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {loggedIn ? <BottomTabs /> : <LoginScreen onLogin={() => setLoggedIn(true)} />}
+      {loggedIn ? (
+        <BottomTabs matches={matches} setMatches={setMatches} />
+      ) : (
+        <LoginScreen onLogin={() => setLoggedIn(true)} />
+      )}
     </View>
   );
 }
