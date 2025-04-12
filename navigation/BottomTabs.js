@@ -2,20 +2,24 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, Platform } from 'react-native';
 
 import SwiperScreen from '../screens/SwiperScreen';
 import MatchesScreen from '../screens/MatchesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import LocationScreen from '../screens/LocationScreen';
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ChatListScreen from '../screens/ChatListScreen';
+import ChatRoomScreen from '../screens/ChatRoomScreen';
 
 const Tab = createBottomTabNavigator();
+const ChatStack = createNativeStackNavigator();
 
-function TabTitle({ name }) {
+function ChatStackNavigator() {
   return (
-    <View style={styles.header}>
-      <Text style={styles.titleText}>{name}</Text>
-    </View>
+    <ChatStack.Navigator>
+      <ChatStack.Screen name="ChatList" component={ChatListScreen} options={{ title: 'Chats' }} />
+      <ChatStack.Screen name="ChatRoom" component={ChatRoomScreen} options={({ route }) => ({ title: route.params.chat.name })} />
+    </ChatStack.Navigator>
   );
 }
 
@@ -24,32 +28,14 @@ export default function BottomTabs({ matches, setMatches }) {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          header: () =>
-            route.name === 'Swipe' ? (
-              <View style={styles.overlayContainer}>
-                <Text style={styles.overlayTitle}>🐾 Dog Meets Dawgs 🐾</Text>
-              </View>
-            ) : (
-              <TabTitle name={route.name} />
-            ),
-          tabBarStyle: {
-            backgroundColor: '#fff',
-            height: 60,
-            borderTopWidth: 1,
-            borderTopColor: '#eee',
-          },
-          tabBarLabelStyle: {
-            fontWeight: 'bold',
-            fontSize: 12,
-          },
-          tabBarActiveTintColor: '#ff8c42',
-          tabBarInactiveTintColor: '#999',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => {
             let iconName;
             if (route.name === 'Swipe') iconName = 'paw';
             else if (route.name === 'Matches') iconName = 'heart';
             else if (route.name === 'Profile') iconName = 'person';
-            else if (route.name === 'Location') iconName = 'location';
+            else if (route.name === 'Chat') iconName = 'chatbox';
+
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
@@ -58,45 +44,9 @@ export default function BottomTabs({ matches, setMatches }) {
           {() => <SwiperScreen matches={matches} setMatches={setMatches} />}
         </Tab.Screen>
         <Tab.Screen name="Matches" component={MatchesScreen} />
+        <Tab.Screen name="Chat" component={ChatStackNavigator} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="Location" component={LocationScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  overlayContainer: {
-    position: 'absolute',
-    top: Platform.OS === 'web' ? 20 : 30,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    alignItems: 'center',
-    pointerEvents: 'none',
-  },
-  overlayTitle: {
-    fontSize: 42,
-    fontWeight: 'bold',
-    fontFamily: 'serif',
-    textAlign: 'center',
-    color: '#fff',
-    textShadowColor: '#000000aa',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 8,
-  },
-  header: {
-    backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'web' ? 20 : 40,
-    paddingBottom: 12,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  titleText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    fontFamily: 'serif',
-    color: '#4a2c2a',
-  },
-});
