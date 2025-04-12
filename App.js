@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
-import BottomTabs from './navigation/BottomTabs';
 import LoginScreen from './screens/LoginScreen';
+import SignUpScreen from './screens/SignUpScreen';
+import BottomTabs from './navigation/BottomTabs';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [matches, setMatches] = useState([]); // 👈 make sure this is here
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [matches, setMatches] = useState([]);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -16,10 +18,17 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {loggedIn ? (
-        <BottomTabs matches={matches} setMatches={setMatches} />
+      {!loggedIn ? (
+        showSignUp ? (
+          <SignUpScreen onSignUp={() => setShowSignUp(false)} />
+        ) : (
+          <LoginScreen
+            onLogin={() => setLoggedIn(true)}
+            goToSignUp={() => setShowSignUp(true)}
+          />
+        )
       ) : (
-        <LoginScreen onLogin={() => setLoggedIn(true)} />
+        <BottomTabs matches={matches} setMatches={setMatches} />
       )}
     </View>
   );

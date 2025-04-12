@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import DogSwiper from '../components/DogSwiper';
 import { Ionicons } from '@expo/vector-icons';
 
 const SwiperScreen = ({ matches, setMatches }) => {
+  const swiperRef = useRef();
   const [dogIndex, setDogIndex] = useState(0);
 
   const dogs = [
@@ -12,28 +13,46 @@ const SwiperScreen = ({ matches, setMatches }) => {
     { name: 'Milo', age: 2, breed: 'French Bulldog', image: 'https://placedog.net/800/600?id=3' },
   ];
 
-  const swiperRef = useRef();
+  const [swipedDogs, setSwipedDogs] = useState([]); // track swipe history manually
 
-  const swipeLeft = () => swiperRef?.current?.swipeLeft();
-  const swipeRight = () => swiperRef?.current?.swipeRight();
-  const rewind = () => swiperRef?.current?.jumpToCardIndex(Math.max(dogIndex - 1, 0));
+  const handleSwipeRight = (dog) => {
+    setMatches((prev) => [...prev, dog]);
+    setSwipedDogs((prev) => [...prev, dog]);
+  };
 
-  const handleSwiped = (index) => setDogIndex(index + 1);
-  const handleSwipeRight = (dog) => setMatches((prev) => [...prev, dog]);
+  const handleSwiped = (index) => {
+    setDogIndex(index + 1);
+  };
+
+  const swipeLeft = () => swiperRef.current?.swipeLeft();
+  const swipeRight = () => swiperRef.current?.swipeRight();
+
+  const rewind = () => {
+    if (swipedDogs.length > 0) {
+      const lastDog = swipedDogs[swipedDogs.length - 1];
+      const lastIndex = dogs.findIndex((d) => d.name === lastDog.name);
+
+      setDogIndex(lastIndex);
+      setSwipedDogs((prev) => prev.slice(0, -1));
+      swiperRef.current?.jumpToCardIndex(lastIndex);
+    }
+  };
+
+  const outOfCards = dogIndex >= dogs.length;
 
   return (
     <View style={styles.container}>
-      {dogIndex >= dogs.length ? (
-        <View style={styles.noMoreContainer}>
-          <Text style={styles.noMoreText}>🐶 No more dogs in your area!</Text>
-        </View>
-      ) : (
+      {!outOfCards ? (
         <DogSwiper
           dogs={dogs}
           swiperRef={swiperRef}
-          onSwipeRight={(dog) => handleSwipeRight(dog)}
           onSwiped={handleSwiped}
+          onSwipeRight={handleSwipeRight}
         />
+      ) : (
+        <View style={styles.noMoreContainer}>
+          <Text style={styles.noMoreText}>🐾 No more dogs in your area!</Text>
+        </View>
       )}
 
       <View style={styles.buttonContainer}>
@@ -51,8 +70,6 @@ const SwiperScreen = ({ matches, setMatches }) => {
   );
 };
 
-const { height } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -62,13 +79,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 30,
   },
   noMoreText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#555',
+    color: '#444',
     textAlign: 'center',
-    paddingHorizontal: 30,
   },
   buttonContainer: {
     position: 'absolute',
@@ -82,7 +99,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   button: {
-    backgroundColor: 'transparent',
     borderRadius: 50,
   },
 });

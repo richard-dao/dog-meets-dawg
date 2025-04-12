@@ -5,22 +5,33 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const LoginScreen = ({ onLogin, goToSignUp }) => {
+const SignUpScreen = ({ onSignUp }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPass, setShowPass] = useState(false);
+  const [confirm, setConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      alert('Please fill in both fields.');
+  const handleSignUp = () => {
+    if (!email || !password || !confirm) {
+      Alert.alert('Missing Fields', 'Please fill out all fields.');
       return;
     }
-    onLogin();
+
+    if (password !== confirm) {
+      Alert.alert('Password Mismatch', 'Passwords do not match.');
+      return;
+    }
+
+    // Simulate success
+    Alert.alert('Success', 'Account created!');
+    onSignUp();
   };
 
   return (
@@ -29,7 +40,7 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
       style={styles.screen}
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome to Dog Meets Dawgs</Text>
+        <Text style={styles.title}>Create an Account</Text>
 
         <TextInput
           placeholder="Email"
@@ -45,28 +56,30 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={!showPass}
+            secureTextEntry={!showPassword}
             style={styles.passwordInput}
           />
-          <TouchableOpacity onPress={() => setShowPass(!showPass)}>
-            <Ionicons
-              name={showPass ? 'eye-off' : 'eye'}
-              size={24}
-              color="#555"
-            />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#555" />
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Log In</Text>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Confirm Password"
+            value={confirm}
+            onChangeText={setConfirm}
+            secureTextEntry={!showConfirm}
+            style={styles.passwordInput}
+          />
+          <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
+            <Ionicons name={showConfirm ? 'eye-off' : 'eye'} size={24} color="#555" />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={handleSignUp} style={styles.button}>
+          <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
-
-        <View style={styles.signupRow}>
-          <Text style={styles.staticText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={goToSignUp}>
-            <Text style={styles.link}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -118,10 +131,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   button: {
-    backgroundColor: '#ff8c42',
+    backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
-    marginTop: 10,
+    marginTop: 20,
     width: '100%',
     maxWidth: 350,
   },
@@ -129,18 +142,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  signupRow: {
-    flexDirection: 'row',
-    marginTop: 15,
-  },
-  staticText: {
-    color: '#444',
-  },
-  link: {
-    color: '#007AFF',
-    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
-export default LoginScreen;
+export default SignUpScreen;
