@@ -45,14 +45,16 @@ const SwiperScreen = ({ matches, setMatches }) => {
         </View>
       )}
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={swipeLeft} style={styles.button}>
-          <Ionicons name="close-circle" size={72} color="#e74c3c" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={swipeRight} style={styles.button}>
-          <Ionicons name="heart-circle" size={72} color="#2ecc71" />
-        </TouchableOpacity>
-      </View>
+      {!outOfCards && (
+        <View style={styles.overlayButtons}>
+          <TouchableOpacity onPress={swipeLeft} style={styles.overlayButton}>
+            <Ionicons name="close-circle" size={72} color="#e74c3c" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={swipeRight} style={styles.overlayButton}>
+            <Ionicons name="heart-circle" size={72} color="#2ecc71" />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -88,6 +90,23 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 50,
   },
+  overlayButtons: {
+    position: 'absolute',
+    bottom: '30%',
+    width: 700,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    zIndex: 10,
+    margin: 5
+  },
+  
+  overlayButton: {
+    borderRadius: 50,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    padding: 10,
+  }
 });
 
 export default SwiperScreen;

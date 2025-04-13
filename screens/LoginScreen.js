@@ -21,12 +21,11 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setLoading(true);
     if (!email || !password) {
       alert('Please fill in both fields.');
       return;
     }
-
-    setLoading(true);
 
     const loginPayload = { email, password };
     const loginResult = await login(loginPayload);
