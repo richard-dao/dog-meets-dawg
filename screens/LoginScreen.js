@@ -9,18 +9,32 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { login } from '../services/api-endpoints';
 
 const LoginScreen = ({ onLogin, goToSignUp }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       alert('Please fill in both fields.');
       return;
     }
-    onLogin();
+
+    const loginPayload = {
+      email: email,
+      password: password
+    };
+
+    const loginResult = await login(loginPayload);
+
+    if (loginResult) {
+      onLogin();
+      // TODO: Store data in a context so that every component can access the account info
+    } else {
+      alert("Error logging in.");
+    }
   };
 
   return (
@@ -29,7 +43,7 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
       style={styles.screen}
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome to Dog Meets Dawgs</Text>
+        <Text style={styles.title}>Welcome to Dog Meets Dawg</Text>
 
         <TextInput
           placeholder="Email"

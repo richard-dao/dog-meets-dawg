@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { createAccount } from '../services/api-endpoints';
 
 const SignUpScreen = ({ onSignUp }) => {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ const SignUpScreen = ({ onSignUp }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!email || !password || !confirm) {
       Alert.alert('Missing Fields', 'Please fill out all fields.');
       return;
@@ -30,8 +31,17 @@ const SignUpScreen = ({ onSignUp }) => {
     }
 
     // Simulate success
-    Alert.alert('Success', 'Account created!');
-    onSignUp();
+    const accountPayload = {
+      email: email,
+      password: password
+    }
+    const createAccountResult = await createAccount(accountPayload);
+
+    if (createAccountResult) {
+      onSignUp();
+    } else {
+      Alert.alert("Error creating account.");
+    }
   };
 
   return (
