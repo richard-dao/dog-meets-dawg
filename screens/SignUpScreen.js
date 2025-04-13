@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { createAccount } from '../services/api-endpoints';
 
-const SignUpScreen = ({ onSignUp }) => {
+const SignUpScreen = ({ goToLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -30,17 +30,14 @@ const SignUpScreen = ({ onSignUp }) => {
       return;
     }
 
-    // Simulate success
-    const accountPayload = {
-      email: email,
-      password: password
-    }
-    const createAccountResult = await createAccount(accountPayload);
+    const accountPayload = { email, password };
+    const result = await createAccount(accountPayload);
 
-    if (createAccountResult) {
-      onSignUp();
+    if (result) {
+      Alert.alert('Account created!', 'Please log in.');
+      goToLogin(); // ✅ Go back to login screen
     } else {
-      Alert.alert("Error creating account.");
+      Alert.alert('Signup Failed', 'Unable to create account.');
     }
   };
 
