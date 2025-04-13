@@ -1,11 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import DogSwiper from '../components/DogSwiper';
 import { Ionicons } from '@expo/vector-icons';
 
-const { height, width } = Dimensions.get('window');
-
-const SwiperScreen = () => {
+const SwiperScreen = ({ matches, setMatches }) => {
   const swiperRef = useRef();
   const [dogIndex, setDogIndex] = useState(0);
 
@@ -15,12 +13,20 @@ const SwiperScreen = () => {
     { name: 'Milo', age: 2, breed: 'French Bulldog', image: 'https://placedog.net/800/600?id=3' },
   ];
 
+  const [swipedDogs, setSwipedDogs] = useState([]); // track swipe history manually
+
+  const handleSwipeRight = () => {
+    // Just go to next dog — no matches tracked
+    setDogIndex((prev) => prev + 1);
+  };
+  
   const handleSwiped = (index) => {
     setDogIndex(index + 1);
   };
-
+  
   const swipeLeft = () => swiperRef.current?.swipeLeft();
   const swipeRight = () => swiperRef.current?.swipeRight();
+
 
   const outOfCards = dogIndex >= dogs.length;
 
@@ -31,6 +37,7 @@ const SwiperScreen = () => {
           dogs={dogs}
           swiperRef={swiperRef}
           onSwiped={handleSwiped}
+          onSwipeRight={handleSwipeRight}
         />
       ) : (
         <View style={styles.noMoreContainer}>
@@ -38,7 +45,6 @@ const SwiperScreen = () => {
         </View>
       )}
 
-      {/* ✅ Like / Dislike buttons over the bottom of the card image */}
       {!outOfCards && (
         <View style={styles.overlayButtons}>
           <TouchableOpacity onPress={swipeLeft} style={styles.overlayButton}>
@@ -70,22 +76,37 @@ const styles = StyleSheet.create({
     color: '#444',
     textAlign: 'center',
   },
-  overlayButtons: {
+  buttonContainer: {
     position: 'absolute',
-    bottom: height * 0.26, // 👈 visually sits over the image
-    width: width * 0.9,
+    bottom: 40,
+    left: 0,
+    right: 0,
+    zIndex: 100,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignSelf: 'center',
-    zIndex: 10,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     paddingHorizontal: 20,
   },
+  button: {
+    borderRadius: 50,
+  },
+  overlayButtons: {
+    position: 'absolute',
+    bottom: '30%',
+    width: 700,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    zIndex: 10,
+    margin: 5
+  },
+  
   overlayButton: {
     borderRadius: 50,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    padding: 12,
-    elevation: 5,
-  },
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    padding: 10,
+  }
 });
 
 export default SwiperScreen;
