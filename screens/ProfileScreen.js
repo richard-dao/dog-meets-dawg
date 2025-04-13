@@ -14,21 +14,23 @@ const ProfileScreen = () => {
     const updatedUser = {
       ...user.user,
       dogName,
-      dogBreed:breed,
+      dogBreed: breed,
       dogAge: age,
       dogBio: bio,
     };
-    console.log(updatedUser);
-    // alert('Profile updated!');
+
     try {
       const response = await updateAccount(updatedUser);
       setUser(updatedUser);
       alert('Profile updated!');
     } catch (err) {
-      alert('Failed to updated profile');
+      alert('Failed to update profile');
       console.error(err);
     }
+  };
 
+  const handleLogout = () => {
+    setUser(null); // this logs the user out
   };
 
   return (
@@ -64,6 +66,9 @@ const ProfileScreen = () => {
       />
 
       <Button title="Save" onPress={handleSave} />
+      <View style={{ marginTop: 12 }}>
+        <Button title="Log Out" onPress={handleLogout} color="#ff6b6b" />
+      </View>
     </View>
   );
 };

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { UserProvider, UserContext } from './context/UserContext';
 import LoginScreen from './screens/LoginScreen';
-import MainWrapper from './navigation/MainWrapper';
 import SignUpScreen from './screens/SignUpScreen'; // optional
+import BottomTabs from './navigation/BottomTabs';
 
 export default function App() {
   return (
@@ -17,10 +17,9 @@ const AppContent = () => {
   const [showSignUp, setShowSignUp] = useState(false);
 
   if (!user) {
-    if (showSignUp) {
-      return <SignUpScreen goToLogin={() => setShowSignUp(false)} />;
-    }
-    return (
+    return showSignUp ? (
+      <SignUpScreen goToLogin={() => setShowSignUp(false)} />
+    ) : (
       <LoginScreen
         onLogin={() => {}}
         goToSignUp={() => setShowSignUp(true)}
@@ -28,5 +27,5 @@ const AppContent = () => {
     );
   }
 
-  return <MainWrapper onLogout={() => {}} />;
+  return <BottomTabs />;
 };

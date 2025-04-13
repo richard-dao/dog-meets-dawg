@@ -7,6 +7,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { login } from '../services/api-endpoints';
@@ -17,6 +18,7 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -24,16 +26,20 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
       return;
     }
 
+    setLoading(true);
+
     const loginPayload = { email, password };
     const loginResult = await login(loginPayload);
 
-    if (loginResult) {
-      console.log(loginResult);
-      setUser({ email, ...loginResult.user });
-      onLogin();
-    } else {
-      alert("Error logging in.");
-    }
+    setTimeout(() => {
+      setLoading(false);
+      if (loginResult) {
+        setUser({ email, ...loginResult.user });
+        onLogin();
+      } else {
+        alert("Error logging in.");
+      }
+    }, 2000); // show spinner briefly before switching
   };
 
   return (
@@ -70,8 +76,16 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Log In</Text>
+        <TouchableOpacity
+          onPress={handleLogin}
+          style={[styles.button, loading && { opacity: 0.7 }]}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Log In</Text>
+          )}
         </TouchableOpacity>
 
         <View style={styles.signupRow}>
