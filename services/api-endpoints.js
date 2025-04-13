@@ -71,7 +71,7 @@ export const getAccounts = async (userID) => {
 		return data;
 	} else {
 		console.error("Get accounts failed:", data);
-		return null;
+		return [];
 	}
 }
 
@@ -89,7 +89,7 @@ export const getMatches = async (userID) => {
 		return data;
 	} else {
 		console.error("Get matches failed:", data);
-		return null;
+		return [];
 	}
 }
 
@@ -107,7 +107,7 @@ export const getChatHistory = async (chatID) => {
 		return data;
 	} else {
 		console.error("Get chat history failed:", data);
-		return null;
+		return [];
 	}
 }
 

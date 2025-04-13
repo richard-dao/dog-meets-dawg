@@ -24,7 +24,7 @@ const ChatListScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			{matches.length > 0 && (
+			{matches && matches.length > 0 && (
 				<FlatList
 					data={matches}
 					keyExtractor={(match) => { return match.chatID }}
