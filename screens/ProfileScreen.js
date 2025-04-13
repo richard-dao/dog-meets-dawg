@@ -1,23 +1,34 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { UserContext } from '../context/UserContext';
+import { updateAccount } from '../services/api-endpoints';
 
 const ProfileScreen = () => {
   const { user, setUser } = useContext(UserContext);
   const [dogName, setDogName] = useState(user?.dogName || '');
-  const [breed, setBreed] = useState(user?.breed || '');
-  const [age, setAge] = useState(String(user?.age || ''));
-  const [bio, setBio] = useState(user?.bio || '');
+  const [breed, setBreed] = useState(user?.dogBreed || '');
+  const [age, setAge] = useState(user?.dogAge || '');
+  const [bio, setBio] = useState(user?.dogBio || '');
 
-  const handleSave = () => {
-    setUser({
-      ...user,
+  const handleSave = async () => {
+    const updatedUser = {
+      ...user.user,
       dogName,
-      breed,
-      age: parseInt(age),
-      bio,
-    });
-    alert('Profile updated!');
+      dogBreed:breed,
+      dogAge: age,
+      dogBio: bio,
+    };
+    console.log(updatedUser);
+    // alert('Profile updated!');
+    try {
+      const response = await updateAccount(updatedUser);
+      setUser(updatedUser);
+      alert('Profile updated!');
+    } catch (err) {
+      alert('Failed to updated profile');
+      console.error(err);
+    }
+
   };
 
   return (

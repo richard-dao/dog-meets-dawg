@@ -37,3 +37,23 @@ export const login = async (credentials) => {
     }
 }
 
+export const updateAccount = async (updatedAccount) => {
+    const endpoint = `${api_baseURL}/update-account`;
+
+    const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedAccount),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+        return data;
+    } else {
+        console.error("Update failed:", data);
+        return null;
+    }
+}
+

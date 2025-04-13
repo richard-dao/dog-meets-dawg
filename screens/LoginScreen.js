@@ -28,7 +28,8 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
     const loginResult = await login(loginPayload);
 
     if (loginResult) {
-      setUser({ email, ...loginResult });
+      console.log(loginResult);
+      setUser({ email, ...loginResult.user });
       onLogin();
     } else {
       alert("Error logging in.");
