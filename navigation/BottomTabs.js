@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 import SwiperScreen from '../screens/SwiperScreen';
-import MatchesScreen from '../screens/MatchesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -18,7 +17,7 @@ function ChatStackNavigator() {
   return (
     <ChatStack.Navigator>
       <ChatStack.Screen name="ChatList" component={ChatListScreen} options={{ title: 'Chats' }} />
-      <ChatStack.Screen name="ChatRoom" component={ChatRoomScreen} options={({ route }) => ({ title: route.params.chat.name })} />
+      <ChatStack.Screen name="ChatRoom" component={ChatRoomScreen} options={({ route }) => ({ title: route.params.chat.userInfo.dogName })} />
     </ChatStack.Navigator>
   );
 }
@@ -34,7 +33,6 @@ export default function BottomTabs({ matches, setMatches }) {
             if (route.name === 'Swipe') iconName = 'paw';
             else if (route.name === 'Matches') iconName = 'heart';
             else if (route.name === 'Profile') iconName = 'person';
-            else if (route.name === 'Chat') iconName = 'chatbox';
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -43,8 +41,7 @@ export default function BottomTabs({ matches, setMatches }) {
         <Tab.Screen name="Swipe">
           {() => <SwiperScreen matches={matches} setMatches={setMatches} />}
         </Tab.Screen>
-        <Tab.Screen name="Matches" component={MatchesScreen} />
-        <Tab.Screen name="Chat" component={ChatStackNavigator} />
+        <Tab.Screen name="Matches" component={ChatStackNavigator} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </NavigationContainer>

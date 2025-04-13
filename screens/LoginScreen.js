@@ -10,11 +10,13 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { login } from '../services/api-endpoints';
+import { getMatches, login } from '../services/api-endpoints';
 import { UserContext } from '../context/UserContext';
+import { MatchesContext } from '../context/MatchesContext';
 
 const LoginScreen = ({ onLogin, goToSignUp }) => {
   const { setUser } = useContext(UserContext);
+  const { setMatches } = useContext(MatchesContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -34,11 +36,22 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
       setLoading(false);
       if (loginResult) {
         setUser({ email, ...loginResult.user });
+
+
         onLogin();
       } else {
         alert("Error logging in.");
       }
     }, 2000); // show spinner briefly before switching
+
+	if (loginResult) {
+		const matchesResult = await getMatches(loginResult.user.userID);
+		if (matchesResult) {
+			setMatches(matchesResult);
+		} else {
+			alert("Error fetching matches.");
+		}
+	}
   };
 
   return (

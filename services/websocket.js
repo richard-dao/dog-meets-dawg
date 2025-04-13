@@ -1,0 +1,1 @@
+export const websocket_baseURL = 'wss://5zre0unk9g.execute-api.us-west-1.amazonaws.com/dev/';

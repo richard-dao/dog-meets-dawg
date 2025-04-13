@@ -57,3 +57,74 @@ export const updateAccount = async (updatedAccount) => {
     }
 }
 
+export const getAccounts = async (userID) => {
+	const endpoint = `${api_baseURL}/getAccounts`;
+	const response = await fetch(endpoint, {
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({userID}),
+	});
+	const data = await response.json();
+	if (response.ok) {
+		return data;
+	} else {
+		console.error("Get accounts failed:", data);
+		return null;
+	}
+}
+
+export const getMatches = async (userID) => {
+	const endpoint = `${api_baseURL}/getMatches`;
+	const response = await fetch(endpoint, {
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({userID}),
+	});
+	const data = await response.json();
+	if (response.ok) {
+		return data;
+	} else {
+		console.error("Get matches failed:", data);
+		return null;
+	}
+}
+
+export const getChatHistory = async (chatID) => {
+	const endpoint = `${api_baseURL}/getChatHistory`;
+	const response = await fetch(endpoint, {
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({chatID}),
+	});
+	const data = await response.json();
+	if (response.ok) {
+		return data;
+	} else {
+		console.error("Get chat history failed:", data);
+		return null;
+	}
+}
+
+export const handleMatch = async (userID, swipedUserID) => {
+	const endpoint = `${api_baseURL}/handleMatch`;
+	const response = await fetch(endpoint, {
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({userID, swipedUserID}),
+	});
+	const data = await response.json();
+	if (response.ok) {
+		return data;
+	} else {
+		console.error("Handle match failed:", data);
+		return null;
+	}
+}
