@@ -44,17 +44,6 @@ const SwiperScreen = ({ matches, setMatches }) => {
           <Text style={styles.noMoreText}>🐾 No more dogs in your area!</Text>
         </View>
       )}
-
-      {!outOfCards && (
-        <View style={styles.overlayButtons}>
-          <TouchableOpacity onPress={swipeLeft} style={styles.overlayButton}>
-            <Ionicons name="close-circle" size={72} color="#e74c3c" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={swipeRight} style={styles.overlayButton}>
-            <Ionicons name="heart-circle" size={72} color="#2ecc71" />
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 };
