@@ -68,7 +68,7 @@ const ChatRoomScreen = ({ route }) => {
 		return () => {
 			ws.close();
 		};
-	}, [chat.latestMessageInfo.chatID]);
+	}, [chat.chatID]);
 
 	const handleSend = () => {
 		if (!input.trim()) return;
@@ -76,7 +76,7 @@ const ChatRoomScreen = ({ route }) => {
 		// WebSocket Stuff
 
 		const messagePayload = {
-			chatID: chat.latestMessageInfo.chatID,
+			chatID: chat.chatID,
 			message: input.trim(),
 			action: "sendMessage"
 		};
