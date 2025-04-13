@@ -27,16 +27,6 @@ const SwiperScreen = ({ matches, setMatches }) => {
   const swipeLeft = () => swiperRef.current?.swipeLeft();
   const swipeRight = () => swiperRef.current?.swipeRight();
 
-  const rewind = () => {
-    if (swipedDogs.length > 0) {
-      const lastDog = swipedDogs[swipedDogs.length - 1];
-      const lastIndex = dogs.findIndex((d) => d.name === lastDog.name);
-
-      setDogIndex(lastIndex);
-      setSwipedDogs((prev) => prev.slice(0, -1));
-      swiperRef.current?.jumpToCardIndex(lastIndex);
-    }
-  };
 
   const outOfCards = dogIndex >= dogs.length;
 
@@ -56,9 +46,6 @@ const SwiperScreen = ({ matches, setMatches }) => {
       )}
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={rewind} style={styles.button}>
-          <Ionicons name="play-back-circle" size={60} color="#6c5ce7" />
-        </TouchableOpacity>
         <TouchableOpacity onPress={swipeLeft} style={styles.button}>
           <Ionicons name="close-circle" size={72} color="#e74c3c" />
         </TouchableOpacity>
