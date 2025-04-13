@@ -3,17 +3,14 @@ import Swiper from 'react-native-deck-swiper';
 import { View, StyleSheet } from 'react-native';
 import DogCard from './DogCard';
 
-const DogSwiper = ({ dogs, onSwipeRight, swiperRef }) => {
+const DogSwiper = ({ dogs, swiperRef, onSwiped }) => {
   return (
     <View style={styles.swiperContainer}>
       <Swiper
         ref={swiperRef}
         cards={dogs}
         renderCard={(dog) => <DogCard {...dog} />}
-        onSwipedRight={(cardIndex) => {
-          const matchedDog = dogs[cardIndex];
-          onSwipeRight(matchedDog);
-        }}
+        onSwiped={onSwiped} // ✅ Only handling general swipe
         stackSize={3}
         backgroundColor={'#f0f0f0'}
         cardIndex={0}
