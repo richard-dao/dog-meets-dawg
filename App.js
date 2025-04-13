@@ -1,41 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { UserProvider, UserContext } from './context/UserContext';
 import LoginScreen from './screens/LoginScreen';
-import SignUpScreen from './screens/SignUpScreen';
-import BottomTabs from './navigation/BottomTabs';
+import MainWrapper from './navigation/MainWrapper';
+import SignUpScreen from './screens/SignUpScreen'; // optional
 
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [showSignUp, setShowSignUp] = useState(false);
-  const [matches, setMatches] = useState([]);
-
-  useEffect(() => {
-    if (Platform.OS === 'web') {
-      document.body.style.backgroundColor = '#fff';
-      document.body.style.margin = '0';
-    }
-  }, []);
-
   return (
-    <View style={styles.container}>
-      {!loggedIn ? (
-        showSignUp ? (
-          <SignUpScreen onSignUp={() => setShowSignUp(false)} />
-        ) : (
-          <LoginScreen
-            onLogin={() => setLoggedIn(true)}
-            goToSignUp={() => setShowSignUp(true)}
-          />
-        )
-      ) : (
-        <BottomTabs matches={matches} setMatches={setMatches} />
-      )}
-    </View>
+    <UserProvider>
+      <AppContent />
+    </UserProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+const AppContent = () => {
+  const { user } = useContext(UserContext);
+  const [showSignUp, setShowSignUp] = useState(false);
+
+  if (!user) {
+    if (showSignUp) {
+      return <SignUpScreen goToLogin={() => setShowSignUp(false)} />;
+    }
+    return (
+      <LoginScreen
+        onLogin={() => {}}
+        goToSignUp={() => setShowSignUp(true)}
+      />
+    );
+  }
+
+  return <MainWrapper onLogout={() => {}} />;
+};

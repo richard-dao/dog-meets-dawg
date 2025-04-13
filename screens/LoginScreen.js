@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { login } from '../services/api-endpoints';
+import { UserContext } from '../context/UserContext';
 
 const LoginScreen = ({ onLogin, goToSignUp }) => {
+  const { setUser } = useContext(UserContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -22,16 +24,12 @@ const LoginScreen = ({ onLogin, goToSignUp }) => {
       return;
     }
 
-    const loginPayload = {
-      email: email,
-      password: password
-    };
-
+    const loginPayload = { email, password };
     const loginResult = await login(loginPayload);
 
     if (loginResult) {
+      setUser({ email, ...loginResult });
       onLogin();
-      // TODO: Store data in a context so that every component can access the account info
     } else {
       alert("Error logging in.");
     }
